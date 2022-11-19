@@ -28,4 +28,12 @@ class StudentsGateway
             'points' => $student->points,
         ]);
     }
+
+    public function countStudents()
+    {
+        $stmt = $this->pdo->query('SELECT COUNT(*) FROM students');
+        $amount = $stmt->fetchColumn();
+
+        return $amount;
+    }
 }

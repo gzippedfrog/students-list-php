@@ -1,5 +1,11 @@
 <?php
-require __DIR__ . "/config.php";
+[
+    'host' => $host,
+    'db' => $db,
+    'charset' => $charset,
+    'user' => $user,
+    'pass' => $pass
+] = parse_ini_file("config.ini");
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
