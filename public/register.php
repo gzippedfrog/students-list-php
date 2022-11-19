@@ -10,10 +10,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = [];
     $student = new Student;
 
-    $student->name = strval(trim($_POST['name']) ?? '');
-    $student->surname = strval(trim($_POST['surname']) ?? '');
-    $student->group_number = strval(trim($_POST['group_number']) ?? '');
-    $student->points = intval(trim($_POST['points']) ?? 0);
+    $student->name = strval(trim($_POST['name'] ?? ''));
+    $student->surname = strval(trim($_POST['surname'] ?? ''));
+    $student->group_number = strval(trim($_POST['group_number'] ?? ''));
+    $student->points = intval(trim($_POST['points'] ?? 0));
 
     $errors = StudentValidator::validate($student);
 

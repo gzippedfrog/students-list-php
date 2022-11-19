@@ -17,13 +17,11 @@ class Pager
         return ceil($this->totalRecords / $this->recordsPerPage);
     }
 
-    public function getLinkForPage($page)
+    public function getLinkForPage($page, $perPage)
     {
-        return str_replace("{page}", $page, $this->linkTemplate);
-    }
+        $link = str_replace("{page}", $page, $this->linkTemplate);
+        $link = str_replace("{perPage}", $perPage, $link);
 
-    public function getLinkForLastPage()
-    {
-        return str_replace("{page}", $this->getTotalPages(), $this->linkTemplate);
+        return $link;
     }
 }

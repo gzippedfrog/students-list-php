@@ -9,9 +9,14 @@ class StudentsGateway
         $this->pdo = $pdo;
     }
 
-    public function getAllStudents()
+    public function getStudents($page, $perPage)
     {
-        $stmt = $this->pdo->query('SELECT * FROM students');
+        $stmt = $this->pdo->prepare('SELECT * FROM students LIMIT :limit OFFSET :offset');
+        $stmt->execute([
+            'limit' => $perPage,
+            'offset' => ($page - 1) * $perPage
+        ]);
+
         $students = $stmt->fetchAll(PDO::FETCH_CLASS, "Student");
 
         return $students;
