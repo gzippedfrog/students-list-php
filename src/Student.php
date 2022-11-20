@@ -7,4 +7,5 @@ class Student
     public $surname;
     public $group_number;
     public $points;
+    public $hash;
 }
