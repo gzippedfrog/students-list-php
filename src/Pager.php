@@ -1,4 +1,5 @@
 <?php
+
 class Pager
 {
     public $totalRecords;
@@ -24,4 +25,20 @@ class Pager
 
         return $link;
     }
+
+    public function getLinkForPrevPage($page, $perPage)
+    {
+        $prevPage = (($page - 1) < 1) ? 1 : $page - 1;
+
+        return $this->getLinkForPage($prevPage, $perPage);
+    }
+
+    public function getLinkForNextPage($page, $perPage)
+    {
+        $pages = $this->getTotalPages();
+        $nextPage = (($page + 1) > $pages) ? $pages : $page + 1;
+
+        return $this->getLinkForPage($nextPage, $perPage);
+    }
+
 }

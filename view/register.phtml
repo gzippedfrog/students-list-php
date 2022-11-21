@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 
 <meta charset="utf-8">
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 
 <div class="container">
     <?php if (isset($result['success'])) : ?>
         <div class="alert alert-success mt-3" role="alert">
-            <?= $result['success']  ?>
+            <?= $result['success'] ?>
         </div>
     <?php elseif (isset($result['error'])) : ?>
         <div class="alert alert-danger mt-3" role="alert">
@@ -24,7 +25,8 @@
                 <label for="name" class="form-label">Имя</label>
             </div>
             <div class="col">
-                <input type="text" class="form-control <?= isset($errors['name']) ? 'is-invalid' : '' ?>" name="name" minlength="1" maxlength="50" required value="John">
+                <input type="text" class="form-control <?= isset($errors['name']) ? 'is-invalid' : '' ?>" name="name"
+                       minlength="1" maxlength="50" value="<?= $student->name ?? '' ?>">
                 <?php if (isset($errors['name'])) : ?>
                     <div class="invalid-feedback"><?= $errors['name'] ?></div>
                 <?php endif ?>
@@ -36,7 +38,8 @@
                 <label for="surname" class="form-label">Фамилия</label>
             </div>
             <div class="col">
-                <input type="text" class="form-control <?= isset($errors['surname']) ? 'is-invalid' : '' ?>" name="surname" minlength="1" maxlength="50" required value="Doe">
+                <input type="text" class="form-control <?= isset($errors['surname']) ? 'is-invalid' : '' ?>"
+                       name="surname" minlength="1" maxlength="50" value="<?= $student->surname ?? '' ?>">
                 <?php if (isset($errors['surname'])) : ?>
                     <div class="invalid-feedback"><?= $errors['surname'] ?></div>
                 <?php endif ?>
@@ -48,7 +51,9 @@
                 <label for="group_number" class="form-label">Номер группы</label>
             </div>
             <div class="col">
-                <input type="text" class="form-control <?= isset($errors['group_number']) ? 'is-invalid' : '' ?>" name="group_number" minlength="1" maxlength="20" required value="1337A1337A1337A1337Aaaa">
+                <input type="text" class="form-control <?= isset($errors['group_number']) ? 'is-invalid' : '' ?>"
+                       name="group_number" minlength="1" maxlength="20"
+                       value="<?= $student->group_number ?? '' ?>">
                 <?php if (isset($errors['group_number'])) : ?>
                     <div class="invalid-feedback"><?= $errors['group_number'] ?></div>
                 <?php endif ?>
@@ -60,7 +65,8 @@
                 <label for="points" class="form-label">Баллы</label>
             </div>
             <div class="col">
-                <input type="number" class="form-control <?= isset($errors['points']) ? 'is-invalid' : '' ?>" name="points" min="0" max="300" required value="300">
+                <input type="number" class="form-control <?= isset($errors['points']) ? 'is-invalid' : '' ?>"
+                       name="points" min="0" max="300" value="<?= $student->points ?? '' ?>">
                 <?php if (isset($errors['points'])) : ?>
                     <div class="invalid-feedback"><?= $errors['points'] ?></div>
                 <?php endif ?>

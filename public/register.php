@@ -6,23 +6,23 @@ $studentsGateway = new StudentsGateway($pdo);
 
 $errors = [];
 
+if (isset($_COOKIE['student_hash'])) {
+    $student = $studentsGateway->getStudentByHash($_COOKIE['student_hash']);
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = [];
-    $student = new Student;
-
-    $student->name = strval(trim($_POST['name'] ?? ''));
-    $student->surname = strval(trim($_POST['surname'] ?? ''));
-    $student->group_number = strval(trim($_POST['group_number'] ?? ''));
-    $student->points = intval(trim($_POST['points'] ?? 0));
+    if (!isset($_COOKIE['student_hash'])) {
+    }
+    $student = new Student(...$_POST);
 
     $errors = StudentValidator::validate($student);
 
     if ($errors) {
         $result['error'] = 'Не удалось добавить/изменить запись';
     } else {
-        $student->hash = md5(time() + rand());
-        $studentsGateway->addStudent($student);
-        setcookie("student_hash", $student->hash, time() + (86400 * 365 * 10));
+        $studentsGateway->upsertStudent($student);
+        setcookie('student_hash', $student->hash, time() + (86400 * 365 * 10), httponly: true);
         $result['success'] = 'Запись успешно добавлена/изменена';
     }
 }
