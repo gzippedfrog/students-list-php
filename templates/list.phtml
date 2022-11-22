@@ -9,7 +9,8 @@
         <label for="searchQuery" class="col col-form-label">Список абитуриентов</label>
         <input type="search" id="searchQuery" class="col ms-3 form-control" autofocus>
         <button type="submit" class="col-auto ms-3 btn btn-primary">Найти</button>
-        <a href="register.php" role="button" class="col-auto ms-3 btn btn-primary"><?= $btnMsg ?></a>
+        <a href="register.php" role="button"
+           class="col-auto ms-3 btn btn-primary"><?= isset($cookie_hash) ? "Изменить данные" : "Регистрация" ?></a>
     </div>
 
 
@@ -57,19 +58,27 @@
         </tbody>
     </table>
 
-    <div class="btn-toolbar mb-3 justify-content-end" role="toolbar">
-        <div class="input-group me-3">
-            <div class="input-group-text">Страница</div>
-            <input type="number" class="form-control" min="1" max="<? //= $pages ?>" value="<?= $page ?>">
-            <div class="input-group-text">из <?= $pages ?></div>
-        </div>
-        <div class="btn-group" role="group">
-            <a class="btn btn-outline-primary" href="<?= $prevPageLink ?>">
-                &laquo;
-            </a>
-            <a class="btn btn-outline-primary" href="<?= $nextPageLink ?>">
-                &raquo;
-            </a>
-        </div>
-    </div>
+    <nav>
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" href="<?= $pager->getLinkForPage($page - 1, $perPage) ?>">
+                    <span>&laquo;</span>
+                </a>
+            </li>
+
+            <?php if ($pages > 1) : ?>
+                <?php for ($i = 1; $i <= $pages; $i++) : ?>
+                    <li class="page-item <?= ($i === $page) ? 'active' : '' ?>">
+                        <a class="page-link" href="<?= $pager->getLinkForPage($i, $perPage) ?>"><?= $i ?></a>
+                    </li>
+                <?php endfor ?>
+            <?php endif ?>
+
+            <li class="page-item">
+                <a class="page-link" href="<?= $pager->getLinkForPage($page + 1, $perPage) ?>">
+                    <span>&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
 </div>

@@ -16,6 +16,6 @@ class Student
         $this->surname = $surname;
         $this->group_number = $group_number;
         $this->points = $points;
-        $this->hash = $hash ?? md5(time() + rand());;
+        $this->hash = $hash ?? md5(time() + rand());
     }
 }

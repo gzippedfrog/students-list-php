@@ -5,13 +5,13 @@
       integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 
 <div class="container">
-    <?php if (isset($result['success'])) : ?>
-        <div class="alert alert-success mt-3" role="alert">
-            <?= $result['success'] ?>
-        </div>
-    <?php elseif (isset($result['error'])) : ?>
+    <?php if ($errors) : ?>
         <div class="alert alert-danger mt-3" role="alert">
-            <?= $result['error'] ?>
+            Не удалось добавить/изменить запись
+        </div>
+    <?php elseif ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
+        <div class="alert alert-success mt-3" role="alert">
+            Запись успешно добавлена/изменена
         </div>
     <?php endif ?>
 
