@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 
 <meta charset="utf-8">
+<style>
+    a {
+        text-decoration: none !important;
+    }
+</style>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
       integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 
@@ -13,18 +18,13 @@
            class="col-auto ms-3 btn btn-primary"><?= isset($cookie_hash) ? "Изменить данные" : "Регистрация" ?></a>
     </div>
 
-
-    <p>
-        your cookie hash: <?= $cookie_hash ?? 'none' ?>
-    </p>
-
     <table class="table mt-3">
         <thead>
         <th>ID</th>
-        <th>Имя</th>
-        <th>Фамилия</th>
-        <th>Номер группы</th>
-        <th>Баллы</th>
+        <th><a href="<?= $sortByNameLink ?>">Имя</a></th>
+        <th><a href="<?= $sortBySurnameLink ?>">Фамилия</a></th>
+        <th><a href="<?= $sortByGroupNumberLink ?>">Номер группы</a></th>
+        <th><a href="<?= $sortByPointsLink ?>">Баллы</a></th>
         </thead>
         <tbody>
         <?php if (isset($students)): ?>
@@ -61,7 +61,7 @@
     <nav>
         <ul class="pagination">
             <li class="page-item">
-                <a class="page-link" href="<?= $pager->getLinkForPage($page - 1, $perPage) ?>">
+                <a class="page-link" href="<?= $pager->getLinkForPage($page - 1, $perPage, $sortColumn, $sortOrder) ?>">
                     <span>&laquo;</span>
                 </a>
             </li>
@@ -69,13 +69,14 @@
             <?php if ($pages > 1) : ?>
                 <?php for ($i = 1; $i <= $pages; $i++) : ?>
                     <li class="page-item <?= ($i === $page) ? 'active' : '' ?>">
-                        <a class="page-link" href="<?= $pager->getLinkForPage($i, $perPage) ?>"><?= $i ?></a>
+                        <a class="page-link"
+                           href="<?= $pager->getLinkForPage($i, $perPage, $sortColumn, $sortOrder) ?>"><?= $i ?></a>
                     </li>
                 <?php endfor ?>
             <?php endif ?>
 
             <li class="page-item">
-                <a class="page-link" href="<?= $pager->getLinkForPage($page + 1, $perPage) ?>">
+                <a class="page-link" href="<?= $pager->getLinkForPage($page + 1, $perPage, $sortColumn, $sortOrder) ?>">
                     <span>&raquo;</span>
                 </a>
             </li>

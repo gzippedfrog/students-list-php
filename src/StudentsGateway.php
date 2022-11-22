@@ -23,9 +23,20 @@ class StudentsGateway
         $this->pdo->query($sql);
     }
 
-    public function getAllStudents($page, $perPage)
+    public function getAllStudents($page = 1, $perPage = 10, $sortColumn = null, $sortOrder = null)
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM students LIMIT :limit OFFSET :offset');
+        if (!in_array(strtolower($sortColumn), ['name', 'surname', 'group_number', 'points'])) {
+            $sortColumn = 'points';
+        }
+
+        if (!in_array(strtolower($sortOrder), ['asc', 'desc'])) {
+            $sortOrder = 'desc';
+        }
+
+        $sql = "SELECT * FROM students ORDER BY $sortColumn $sortOrder LIMIT :limit OFFSET :offset";
+
+        $stmt = $this->pdo->prepare($sql);
+
         $stmt->execute([
             'limit' => $perPage,
             'offset' => ($page - 1) * $perPage

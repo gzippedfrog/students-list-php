@@ -18,10 +18,12 @@ class Pager
         return ceil($this->totalRecords / $this->recordsPerPage);
     }
 
-    public function getLinkForPage($page, $perPage)
+    public function getLinkForPage($page, $perPage, $sortColumn, $sortOrder)
     {
         $link = str_replace("{page}", $page, $this->linkTemplate);
         $link = str_replace("{perPage}", $perPage, $link);
+        $link = str_replace("{sortColumn}", $sortColumn, $link);
+        $link = str_replace("{sortOrder}", $sortOrder, $link);
 
         return $link;
     }
