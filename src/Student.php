@@ -2,6 +2,13 @@
 
 class Student
 {
+    public ?int $id;
+    public string $name;
+    public string $surname;
+    public string $group_number;
+    public int $points;
+    public ?string $hash;
+
     public function __construct(
         $id = null,
         $name = '',

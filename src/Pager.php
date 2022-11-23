@@ -2,45 +2,26 @@
 
 class Pager
 {
-    public $totalRecords;
-    public $recordsPerPage;
-    public $linkTemplate;
+    public int $totalRecords;
+    public int $perPage = 10;
+    public string $linkTemplate;
 
-    public function __construct($totalRecords, $recordsPerPage, $linkTemplate)
+    public function __construct($totalRecords, $linkTemplate)
     {
         $this->totalRecords = $totalRecords;
-        $this->recordsPerPage = $recordsPerPage;
         $this->linkTemplate = $linkTemplate;
     }
 
-    public function getTotalPages()
+    public function getTotalPages(): int
     {
-        return ceil($this->totalRecords / $this->recordsPerPage);
+        return ceil($this->totalRecords / $this->perPage);
     }
 
-    public function getLinkForPage($page, $perPage, $sortColumn, $sortOrder)
+    public function getLinkForPage($page = 1, $sortColumn = 'points'): string
     {
         $link = str_replace("{page}", $page, $this->linkTemplate);
-        $link = str_replace("{perPage}", $perPage, $link);
-        $link = str_replace("{sortColumn}", $sortColumn, $link);
-        $link = str_replace("{sortOrder}", $sortOrder, $link);
+        $link = str_replace("{perPage}", $this->perPage, $link);
 
-        return $link;
+        return str_replace("{sortColumn}", $sortColumn, $link);
     }
-
-    public function getLinkForPrevPage($page, $perPage)
-    {
-        $prevPage = (($page - 1) < 1) ? 1 : $page - 1;
-
-        return $this->getLinkForPage($prevPage, $perPage);
-    }
-
-    public function getLinkForNextPage($page, $perPage)
-    {
-        $pages = $this->getTotalPages();
-        $nextPage = (($page + 1) > $pages) ? $pages : $page + 1;
-
-        return $this->getLinkForPage($nextPage, $perPage);
-    }
-
 }

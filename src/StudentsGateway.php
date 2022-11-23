@@ -2,14 +2,14 @@
 
 class StudentsGateway
 {
-    private $pdo;
+    private PDO $pdo;
 
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
     }
 
-    public function createTable()
+    public function createTable(): void
     {
         $sql = "CREATE TABLE IF NOT EXISTS `students` (
             `id` int NOT NULL AUTO_INCREMENT,
@@ -23,29 +23,47 @@ class StudentsGateway
         $this->pdo->query($sql);
     }
 
-    public function getAllStudents($page = 1, $perPage = 10, $sortColumn = null, $sortOrder = null)
+    public function getAndCountStudents($page = 1, $sortColumn = null, $searchQuery = null, $perPage = 10): array
     {
-        if (!in_array(strtolower($sortColumn), ['name', 'surname', 'group_number', 'points'])) {
+        if (!in_array($sortColumn, ['name', 'surname', 'group_number', 'points'])) {
             $sortColumn = 'points';
         }
 
-        if (!in_array(strtolower($sortOrder), ['asc', 'desc'])) {
-            $sortOrder = 'desc';
+        $sql1 = "SELECT * FROM students";
+        $sql2 = "SELECT COUNT(*) FROM students";
+
+        if ($searchQuery) {
+            $whereSql = " WHERE CONCAT(name, surname, group_number, points) LIKE CONCAT('%', :query, '%')";
+            $sql1 = $sql1 . $whereSql;
+            $sql2 = $sql2 . $whereSql;
         }
 
-        $sql = "SELECT * FROM students ORDER BY $sortColumn $sortOrder LIMIT :limit OFFSET :offset";
+        $sql1 = $sql1 . " ORDER BY $sortColumn ASC LIMIT :limit OFFSET :offset";
 
-        $stmt = $this->pdo->prepare($sql);
+        $stmt1 = $this->pdo->prepare($sql1);
+        $stmt2 = $this->pdo->prepare($sql2);
 
-        $stmt->execute([
-            'limit' => $perPage,
-            'offset' => ($page - 1) * $perPage
-        ]);
+        if ($searchQuery) {
+            $stmt1->bindValue(':query', $searchQuery);
+            $stmt2->bindValue(':query', $searchQuery);
+        }
 
-        return $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, "Student");
+        $stmt1->bindValue(':limit', $perPage);
+        $stmt1->bindValue(':offset', ($page - 1) * $perPage);
+
+        $stmt1->execute();
+        $stmt2->execute();
+
+        $students = $stmt1->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, "Student");
+        $total = $stmt2->fetchColumn();
+
+        return [
+            'students' => $students,
+            'total' => $total,
+        ];
     }
 
-    public function updateStudent(Student $student)
+    public function updateStudent(Student $student): void
     {
         $sql = "UPDATE `students` SET
             `name` = :name,
@@ -65,7 +83,7 @@ class StudentsGateway
         ]);
     }
 
-    public function insertStudent(Student $student)
+    public function insertStudent(Student $student): void
     {
         $sql = "INSERT INTO `students` 
             (`id`, `name`, `surname`, `group_number`, `points`, `hash`) 
@@ -88,18 +106,12 @@ class StudentsGateway
         $sql = 'SELECT * FROM students WHERE hash = ?';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([$hash]);
-        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Student',);
+        $stmt->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Student');
 
         return $stmt->fetch();
     }
 
-    public function countStudents()
-    {
-        $stmt = $this->pdo->query('SELECT COUNT(*) FROM students');
-        return $stmt->fetchColumn();
-    }
-
-    public function populateTable()
+    public function populateTable(): void
     {
         require __DIR__ . '/database/data.php';
 
