@@ -45,9 +45,9 @@
             <?php if (!empty($students)): ?>
             <?php foreach ($students as $student): ?>
             <tr class="bg-gray-100 border-b last-of-type:border-none dark:bg-gray-800 dark:border-gray-700">
-                <th scope="row" class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                <td scope="row" class="py-4 px-6">
                     <?= htmlspecialchars($student['first_name']) ?>
-                </th>
+                </td>
                 <td class="py-4 px-6">
                     <?= htmlspecialchars($student['last_name']) ?>
                 </td>
@@ -58,7 +58,7 @@
                     <?= htmlspecialchars($student['points']) ?>
                 </td>
                 <td class="py-4 px-6">
-                    <a href=<?='students/edit?id=' . htmlspecialchars($student['id']) ?> class="font-medium
+                    <a href=<?='edit?id=' . htmlspecialchars($student['id']) ?> class="font-medium
                         text-blue-600
                         dark:text-blue-500 hover:underline">Edit</a>
                 </td>
@@ -67,7 +67,7 @@
             <?php else: ?>
             <tr class="bg-gray-100 border-b last-of-type:border-none dark:bg-gray-800 dark:border-gray-700">
                 <th colspan="5" scope="row"
-                    class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white text-center">
+                    class="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-gray-400 text-center">
                     Nothing found
                 </th>
             </tr>
@@ -75,5 +75,14 @@
         </tbody>
     </table>
 </div>
+
+<!-- ALERT -->
+<?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
+<div x-data="{ show: true }"
+    class="absolute cursor-pointer top-4 left-1/2 -translate-x-1/2 p-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800 z-50"
+    role="alert" x-show="show" @click="show = false">
+    Successfully updated
+</div>
+<?php endif ?>
 
 <?php include 'partials/footer.view.php' ?>

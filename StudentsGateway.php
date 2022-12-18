@@ -11,20 +11,16 @@ class StudentsGateway
 
     public function getStudents($search = '')
     {
+        $sql = 'SELECT * FROM students';
+
         $placeholders = [];
         $conditions = [];
 
         if ($search) {
-            $placeholders[':search'] = $search;
-            $conditions[] = ' LIKE :search';
+            $placeholders = ["%$search%", "%$search%", "%$search%", "%$search%"];
+            $conditions = ['first_name LIKE ?', 'last_name LIKE ?', 'group_number LIKE ?', 'points LIKE ?'];
+            $sql .= ' WHERE ' . implode(' OR ', $conditions);
         }
-
-        $where = implode(' AND ', $conditions);
-        // $whereWord = $conditions ? ' WHERE CONCAT(first_name, last_name, group_number, points)' : '';
-        $whereWord = $conditions ? ' WHERE first_name' : '';
-        $sql = 'SELECT * FROM students' . $whereWord . $where;
-
-        // dd($sql);
 
         $stmt = $this->connection->prepare($sql);
         $stmt->execute($placeholders);

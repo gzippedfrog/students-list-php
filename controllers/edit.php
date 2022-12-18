@@ -1,30 +1,26 @@
 <?php
 
-// dd($_SERVER['REQUEST_METHOD']);
+$method = $_SERVER['REQUEST_METHOD'];
 
-switch ($_SERVER['REQUEST_METHOD']) {
-    case 'POST':
-        if (isset($_POST['id'])) {
-            $errors = validateStudent($_POST);
+// dd($_SESSION);
+// session_start();
+// $_SESSION['message'] = 'success';
 
-            if ($errors) {
-                $student = $_POST;
-                require 'views/edit.view.php';
-            } else {
-                $studentsGateway->updateStudent($_POST);
-                header('Location: /');
-                die();
-            }
+if ($method === 'POST' && isset($_POST['id'])) {
+    $errors = validateStudent($_POST);
 
-            break;
-        }
-    case 'GET':
-        if (isset($_GET['id'])) {
-            $student = $studentsGateway->getStudentById($_GET['id']);
-            $student ? require 'views/edit.view.php' : abort();
-        }
-        break;
-    default:
-        header('Location: /');
-        die();
+    if (!$errors) {
+        $studentsGateway->updateStudent($_POST);
+
+        header('Location: /?success=1');
+        // die();
+    } else {
+        $student = $_POST;
+    }
+
+} elseif ($method === 'GET' && isset($_GET['id'])) {
+    $student = $studentsGateway->getStudentById($_GET['id']);
+    !$student && abort();
 }
+
+require 'views/edit.view.php';
