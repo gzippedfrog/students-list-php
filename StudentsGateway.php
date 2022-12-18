@@ -38,7 +38,7 @@ class StudentsGateway
             'first_name' => $student['first_name'],
             'last_name' => $student['last_name'],
             'group_number' => $student['group_number'],
-            'points' => $student['points'],
+            'points' => (int) $student['points'],
         ]);
     }
 
