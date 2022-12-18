@@ -9,9 +9,27 @@ class StudentsGateway
         $this->connection = $connection;
     }
 
-    public function getAllStudents()
+    public function getStudents($search = '')
     {
-        return $this->connection->query('SELECT * FROM students')->fetchAll();
+        $placeholders = [];
+        $conditions = [];
+
+        if ($search) {
+            $placeholders[':search'] = $search;
+            $conditions[] = ' LIKE :search';
+        }
+
+        $where = implode(' AND ', $conditions);
+        // $whereWord = $conditions ? ' WHERE CONCAT(first_name, last_name, group_number, points)' : '';
+        $whereWord = $conditions ? ' WHERE first_name' : '';
+        $sql = 'SELECT * FROM students' . $whereWord . $where;
+
+        // dd($sql);
+
+        $stmt = $this->connection->prepare($sql);
+        $stmt->execute($placeholders);
+
+        return $stmt->fetchAll();
     }
 
     public function getStudentById($id)
@@ -24,12 +42,12 @@ class StudentsGateway
 
     public function updateStudent($student)
     {
-        $sql = "UPDATE `students` SET
-        `first_name` = :first_name,
-        `last_name` = :last_name,
-        `group_number` = :group_number,
-        `points` = :points
-        WHERE id = :id";
+        $sql = 'UPDATE `students`
+                SET `first_name` = :first_name,
+                    `last_name` = :last_name,
+                    `group_number` = :group_number,
+                    `points` = :points
+                WHERE id = :id';
 
         $stmt = $this->connection->prepare($sql);
 
