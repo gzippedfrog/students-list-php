@@ -1,4 +1,4 @@
-<?php include 'partials/head.view.php' ?>
+<?php view('partials/head') ?>
 
 <!-- SEARCH -->
 <form method="GET" action="/">
@@ -46,19 +46,19 @@
             <?php foreach ($students as $student): ?>
             <tr class="bg-gray-100 border-b last-of-type:border-none dark:bg-gray-800 dark:border-gray-700">
                 <td scope="row" class="py-4 px-6">
-                    <?= htmlspecialchars($student['first_name']) ?>
+                    <?= htmlspecialchars($student->first_name) ?>
                 </td>
                 <td class="py-4 px-6">
-                    <?= htmlspecialchars($student['last_name']) ?>
+                    <?= htmlspecialchars($student->last_name) ?>
                 </td>
                 <td class="py-4 px-6">
-                    <?= htmlspecialchars($student['group_number']) ?>
+                    <?= htmlspecialchars($student->group_number) ?>
                 </td>
                 <td class="py-4 px-6">
-                    <?= htmlspecialchars($student['points']) ?>
+                    <?= htmlspecialchars($student->points) ?>
                 </td>
                 <td class="py-4 px-6">
-                    <a href=<?='edit?id=' . htmlspecialchars($student['id']) ?> class="font-medium
+                    <a href=<?='edit?id=' . htmlspecialchars($student->id) ?> class="font-medium
                         text-blue-600
                         dark:text-blue-500 hover:underline">Edit</a>
                 </td>
@@ -85,4 +85,4 @@
 </div>
 <?php endif ?>
 
-<?php include 'partials/footer.view.php' ?>
+<?php view('partials/footer') ?>

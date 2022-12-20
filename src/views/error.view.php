@@ -1,4 +1,4 @@
-<?php include 'partials/head.view.php' ?>
+<?php view('partials/head') ?>
 
 <div class="text-center">
     <p class="text-6xl font-bold">
@@ -10,4 +10,4 @@
     </p>
 </div>
 
-<?php include 'partials/footer.view.php' ?>
+<?php view('partials/footer') ?>

@@ -1,13 +1,15 @@
 <?php
 declare(strict_types=1);
 
-require 'functions.php';
+const BASE_PATH = __DIR__ . '/../src/';
+
+require BASE_PATH . 'functions.php';
 
 spl_autoload_register(function ($class_name) {
-    require "$class_name.php";
+    require base_path("$class_name.php");
 });
 
-$dsn = 'mysql:' . http_build_query(parse_ini_file("config.ini"), '', ';');
+$dsn = 'mysql:' . http_build_query(parse_ini_file(base_path('../config.ini')), '', ';');
 
 $pdo = new PDO($dsn, options: [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -15,6 +17,6 @@ $pdo = new PDO($dsn, options: [
         PDO::ATTR_EMULATE_PREPARES => false,
 ]);
 
-$studentsGateway = new StudentsGateway($pdo);
+Student::setConnection($pdo);
 
-require 'router.php';
+require base_path('router.php');
