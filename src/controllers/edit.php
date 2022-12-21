@@ -5,7 +5,7 @@ $uri = parse_url($_SERVER['REQUEST_URI'])['path'];
 
 if ($method === 'POST' && isset($_POST['id'])) {
     $student = new Student(...$_POST);
-    $errors = $student->validate();
+    $errors = validateStudent($student);
 
     if (!$errors) {
         $student->save();

@@ -14,14 +14,15 @@ class Student
         $id = null,
         $first_name = null,
         $last_name = null,
-        $group_number = null, 
+        $group_number = null,
         $points = null,
-    ) {
-        $this->id = (int) $id;
-        $this->first_name = (string) $first_name;
-        $this->last_name = (string) $last_name;
-        $this->group_number = (string) $group_number; 
-        $this->points = (int) $points;
+    )
+    {
+        $this->id = $id;
+        $this->first_name = $first_name;
+        $this->last_name = $last_name;
+        $this->group_number = $group_number;
+        $this->points = $points;
     }
 
     public static function setConnection(PDO $connection)
@@ -29,23 +30,43 @@ class Student
         self::$connection = $connection;
     }
 
-    public static function get($query = '')
+
+    public static function get($query = '', $page = 1, $perPage = 10)
     {
-        $sql = 'SELECT * FROM students';
+        $page = $page ? $page : 1;
+        $perPage = $perPage ? $perPage : 10;
 
-        $placeholders = [];
-        $conditions = [];
+        $sql1 = "SELECT * 
+            FROM students 
+            WHERE 
+                first_name LIKE :query OR
+                last_name LIKE :query OR
+                group_number LIKE :query OR
+                points LIKE :query
+            LIMIT $perPage OFFSET :offset";
 
-        if ($query) {
-            $placeholders = ["%$query%", "%$query%", "%$query%", "%$query%"];
-            $conditions = ['first_name LIKE ?', 'last_name LIKE ?', 'group_number LIKE ?', 'points LIKE ?'];
-            $sql .= ' WHERE ' . implode(' OR ', $conditions);
-        }
+        $sql2 = 'SELECT COUNT(*) 
+            FROM students 
+            WHERE 
+                first_name LIKE :query OR
+                last_name LIKE :query OR
+                group_number LIKE :query OR
+                points LIKE :query';
 
-        $stmt = self::$connection->prepare($sql);
-        $stmt->execute($placeholders);
+        $stmt1 = self::$connection->prepare($sql1);
+        $stmt2 = self::$connection->prepare($sql2);
 
-        return $stmt->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Student');
+        $stmt1->bindValue(':query', "%$query%");
+        $stmt2->bindValue(':query', "%$query%");
+        $stmt1->bindValue(':offset', ($page - 1) * $perPage, PDO::PARAM_INT);
+
+        $stmt1->execute();
+        $stmt2->execute();
+
+        return [
+            'list' => $stmt1->fetchAll(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, 'Student'),
+            'pages' => ceil($stmt2->fetchColumn() / $perPage),
+        ];
     }
 
     public static function getById($id)
@@ -77,27 +98,4 @@ class Student
             'points' => $this->points,
         ]);
     }
-
-    function validate()
-{
-    $errors = [];
-
-    if (!preg_match('/^[\p{Cyrillic}A-z \'-]{1,255}$/u', $this->first_name)) {
-        $errors['first_name'] = 'Only cyrillic and latin letters, whitespace, \' and -. Length from 1 to 255 characters.';
-    }
-
-    if (!preg_match('/^[\p{Cyrillic}A-z \'-]{1,255}$/u', $this->last_name)) {
-        $errors['last_name'] = 'Only cyrillic and latin letters, whitespace, \' and -. Length from 1 to 255 characters.';
-    }
-
-    if (!preg_match('/^[\p{Cyrillic}A-z\d]{1,20}$/u', $this->group_number)) {
-        $errors['group_number'] = 'Only cyrillic and latin letters and numbers. Length from 1 to 20 characters.';
-    }
-
-    if ($this->points < 0 || $this->points > 300) {
-        $errors['points'] = 'Only values from 0 to 300.';
-    }
-
-    return $errors;
-}
 }

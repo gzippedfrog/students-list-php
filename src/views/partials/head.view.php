@@ -18,7 +18,8 @@
     <nav class="bg-white border-gray-200 p-6 dark:bg-gray-900 w-full max-w-4xl mx-auto ">
         <div class="flex items-center justify-between">
             <a href="/" class="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Students list</a>
-            <a href="/register" class="text-gray-400 dark:hover:text-white">Register</a>
+            <a href="/register"
+                class="text-gray-500 hover:text-gray-600 dark:text-gray-400 dark:hover:text-white">Register</a>
         </div>
     </nav>
 

@@ -1,5 +1,11 @@
 <?php
 
+$students = Student::get($_GET['search'], $_GET['page']);
+
+
 view('index', [
-    'students' => Student::get($_GET['search'] ?? ''),
+    'students' => $students['list'],
+    'pages' => $students['pages'],
+    'prevPageLink' => Paginator::getPrevPageLink(),
+    'nextPageLink' => Paginator::getNextPageLink($students['pages']),
 ]);
