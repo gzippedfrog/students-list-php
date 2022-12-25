@@ -24,4 +24,4 @@
     </nav>
 
     <!-- MAIN SECTION -->
-    <main class="flex-1 w-full p-2 max-w-4xl mx-auto px-6">
+    <main class="flex-1 w-full max-w-4xl mx-auto p-6">

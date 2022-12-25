@@ -16,9 +16,8 @@ class Student
         $last_name = null,
         $group_number = null,
         $points = null,
-    )
-    {
-        $this->id = $id;
+    ) {
+        $this->id = $id ? $id : null;
         $this->first_name = $first_name;
         $this->last_name = $last_name;
         $this->group_number = $group_number;
@@ -31,11 +30,14 @@ class Student
     }
 
 
-    public static function get($query = '', $page = 1, $perPage = 10)
-    {
-        $page = $page ? $page : 1;
-        $perPage = $perPage ? $perPage : 10;
-
+    public static function get(
+        $query = '',
+        $page = 1,
+        $perPage = 10,
+        $sortBy = 'first_name',
+        $sortDir = 'asc',
+        ...$other,
+    ) {
         $sql1 = "SELECT * 
             FROM students 
             WHERE 
@@ -43,6 +45,7 @@ class Student
                 last_name LIKE :query OR
                 group_number LIKE :query OR
                 points LIKE :query
+            ORDER BY $sortBy $sortDir
             LIMIT $perPage OFFSET :offset";
 
         $sql2 = 'SELECT COUNT(*) 
@@ -58,6 +61,7 @@ class Student
 
         $stmt1->bindValue(':query', "%$query%");
         $stmt2->bindValue(':query', "%$query%");
+
         $stmt1->bindValue(':offset', ($page - 1) * $perPage, PDO::PARAM_INT);
 
         $stmt1->execute();
@@ -91,11 +95,11 @@ class Student
         $stmt = self::$connection->prepare($sql);
 
         $stmt->execute([
-            'id' => $this->id,
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'group_number' => $this->group_number,
-            'points' => $this->points,
+            ':id' => $this->id,
+            ':first_name' => $this->first_name,
+            ':last_name' => $this->last_name,
+            ':group_number' => $this->group_number,
+            ':points' => $this->points,
         ]);
     }
 }

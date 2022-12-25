@@ -47,3 +47,16 @@ function validateStudent(Student $student)
 
     return $errors;
 }
+
+function getUrlWithSortBy($value, $params)
+{
+    if ($params['sortBy'] === $value) {
+        $params['sortDir'] = $params['sortDir'] === 'asc' ? 'desc' : 'asc';
+    } else {
+        $params['sortBy'] = $value;
+        $params['sortDir'] = 'asc';
+    }
+    $params['page'] = 1;
+
+    return '/?' . http_build_query($params);
+}
